@@ -9,7 +9,7 @@ class Unicorn
         @color == 'silver'
     end
 
-    def say(str)
-        "**;* #{str} **;*"
+    def say(msg)
+        "**;* #{msg} **;*"
     end
 end
