@@ -118,15 +118,19 @@ RSpec.describe 'Advanced Nested Collections' do
 
   it 'test 10' do
     # Return the full menu for Olive Garden
-    def get_menu(store)
-      og_dishes = {}
-      store[:dishes].map{ |dish|
-          og_dishes[dish[:name]] = dish
-      }
-      return og_dishes
-    end
+    
 
-    olive_garden_menu = get_menu(stores[:olive_garden])
+    olive_garden_menu = -> {
+      def get_menu(store)
+        dishes_obj = {}
+        store[:dishes].map{ |dish|
+            dishes_obj[dish[:name]] = dish
+        }
+        return dishes_obj
+      end
+
+      get_menu(stores[:olive_garden])
+    }.call
 
     expected = {
       "Risotto" => {
@@ -146,19 +150,22 @@ RSpec.describe 'Advanced Nested Collections' do
   it 'test 11' do
     # Return a full menu across all restaurants
 
-    def get_menus
-      menu_accum = {}
-      stores.each{ |store_name, store_obj| 
-        store_obj.each{ |k,v|
-          if k == :dishes
-              v.each{ |dish| menu_accum[dish[:name]] = v[0] }
-          end
+    full_menu = -> {
+      def get_menu(store)
+        dishes_obj = {}
+        stores[store][:dishes].map{ |dish|
+            dishes_obj[dish[:name]] = dish
         }
+        return dishes_obj
+      end
+      
+      menu_aggro = {}
+       
+      stores.each{ |store, val| 
+          menu_aggro = menu_aggro.merge(get_menu(store))
       }
-      return menu_accum
-    end
-
-    full_menu = get_menus
+      return menu_aggro
+    }.call
 
     expected = {
       "Risotto" => {
