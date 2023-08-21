@@ -18,7 +18,7 @@ RSpec.describe Ogre do
     expect(ogre.home).to eq('Castle')
   end
 
-  it 'can meets humans' do
+  it 'can meet humans' do
     ogre = Ogre.new('Brak')
     human = Human.new
     expect(human.name).to eq('Jane')
